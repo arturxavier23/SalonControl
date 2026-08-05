@@ -1,0 +1,7 @@
+project_id = "whogcwwzaitirjskcjuk"
+
+# A função admin-saloes precisa responder ao preflight CORS (OPTIONS) do
+# navegador, que não envia token. Por isso desligamos a verificação de JWT
+# no nível da plataforma — a própria função valida o super admin por dentro.
+[functions.admin-saloes]
+verify_jwt = false
