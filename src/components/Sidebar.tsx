@@ -1,8 +1,15 @@
+import { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
+import { supabase } from '../services/supabase'
 
 type SidebarProps = {
   aberto?: boolean
   onFechar?: () => void
+}
+
+type MarcaSalao = {
+  nome: string
+  logoUrl: string | null
 }
 
 type ItemMenu = {
@@ -97,20 +104,36 @@ const itens: ItemMenu[] = [
   },
 ]
 
-function ConteudoSidebar({ onFechar }: { onFechar?: () => void }) {
+function ConteudoSidebar({
+  onFechar,
+  marca,
+}: {
+  onFechar?: () => void
+  marca: MarcaSalao
+}) {
   return (
     <>
       <div className="mb-10 flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-indigo-600 shadow-lg shadow-indigo-950/40">
-          <svg className="h-5 w-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M8 21h8" />
-            <path d="M12 17v4" />
-            <path d="M7 4h10l-1 8a4 4 0 0 1-8 0z" />
-          </svg>
-        </div>
-        <div>
-          <h1 className="text-lg font-bold leading-tight text-white">SalonControl</h1>
-          <p className="text-xs text-zinc-500">Gestão de salões</p>
+        {marca.logoUrl ? (
+          <img
+            src={marca.logoUrl}
+            alt="Logo"
+            className="h-16 w-16 shrink-0 rounded-xl object-contain"
+          />
+        ) : (
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-indigo-600 shadow-lg shadow-indigo-950/40">
+            <svg className="h-5 w-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M8 21h8" />
+              <path d="M12 17v4" />
+              <path d="M7 4h10l-1 8a4 4 0 0 1-8 0z" />
+            </svg>
+          </div>
+        )}
+        <div className="min-w-0">
+          <h1 className="truncate text-lg font-bold leading-tight text-white">
+            {marca.nome || 'SalonControl'}
+          </h1>
+          <p className="truncate text-xs text-zinc-500">SalonControl</p>
         </div>
       </div>
 
@@ -138,11 +161,46 @@ function ConteudoSidebar({ onFechar }: { onFechar?: () => void }) {
 }
 
 function Sidebar({ aberto = false, onFechar }: SidebarProps) {
+  const [marca, setMarca] = useState<MarcaSalao>({ nome: '', logoUrl: null })
+
+  useEffect(() => {
+    async function carregarMarca() {
+      const { data } = await supabase
+        .from('saloes')
+        .select('nome, logo_url')
+        .maybeSingle()
+
+      if (data) {
+        setMarca({ nome: data.nome ?? '', logoUrl: data.logo_url ?? null })
+
+        // Título da aba com o nome do salão
+        document.title = data.nome
+          ? `${data.nome} — SalonControl`
+          : 'SalonControl'
+
+        // Favicon com a logo do salão
+        if (data.logo_url) {
+          let icone = document.querySelector<HTMLLinkElement>(
+            "link[rel~='icon']"
+          )
+          if (!icone) {
+            icone = document.createElement('link')
+            icone.rel = 'icon'
+            document.head.appendChild(icone)
+          }
+          icone.href = data.logo_url
+        }
+      }
+    }
+
+    carregarMarca()
+  }, [])
+
   return (
     <>
       {/* Desktop */}
       <aside className="hidden w-64 shrink-0 border-r border-white/10 bg-zinc-900/50 p-6 backdrop-blur-xl md:block">
-        <ConteudoSidebar />
+        <ConteudoSidebar marca={marca} />
       </aside>
 
       {/* Mobile (drawer) */}
@@ -153,7 +211,7 @@ function Sidebar({ aberto = false, onFechar }: SidebarProps) {
             onClick={onFechar}
           />
           <aside className="absolute left-0 top-0 h-full w-64 border-r border-white/10 bg-zinc-900 p-6">
-            <ConteudoSidebar onFechar={onFechar} />
+            <ConteudoSidebar marca={marca} onFechar={onFechar} />
           </aside>
         </div>
       )}
