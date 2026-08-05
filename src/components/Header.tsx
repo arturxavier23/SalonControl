@@ -1,48 +1,87 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { supabase } from '../services/supabase'
+import { obterPerfilUsuario } from '../services/auth'
 
 type HeaderProps = {
   onAbrirMenu?: () => void
 }
 
+type SalaoItem = {
+  id: string
+  nome: string
+  role: string
+}
+
 function Header({ onAbrirMenu }: HeaderProps) {
   const navigate = useNavigate()
   const [emailUsuario, setEmailUsuario] = useState('')
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null)
+  const [ehAdmin, setEhAdmin] = useState(false)
+  const [saloes, setSaloes] = useState<SalaoItem[]>([])
+  const [salaoAtivo, setSalaoAtivo] = useState('')
 
-  async function buscarUsuario() {
+  async function carregar() {
     const { data } = await supabase.auth.getUser()
-
     if (data.user?.email) {
       setEmailUsuario(data.user.email)
     }
+
+    const perfil = await obterPerfilUsuario()
+    setAvatarUrl(perfil?.avatar_url ?? null)
+    setEhAdmin(perfil?.role === 'admin')
+    setSalaoAtivo(perfil?.salao_id ?? '')
+
+    const { data: lista } = await supabase.rpc('meus_saloes')
+    setSaloes((lista as SalaoItem[]) ?? [])
+  }
+
+  useEffect(() => {
+    carregar()
+  }, [])
+
+  async function trocarFilial(id: string) {
+    if (!id || id === salaoAtivo) return
+
+    const { error } = await supabase.rpc('trocar_salao', { p_salao: id })
+    if (error) {
+      console.error(error)
+      return
+    }
+    window.location.reload()
+  }
+
+  async function novaFilial() {
+    const nome = window.prompt('Nome da nova filial:')
+    if (!nome) return
+
+    const { error } = await supabase.rpc('criar_filial', { p_nome: nome })
+    if (error) {
+      console.error(error)
+      alert('Erro ao criar filial.')
+      return
+    }
+    window.location.reload()
   }
 
   async function sair() {
     const confirmar = confirm('Deseja sair do sistema?')
-
     if (!confirmar) return
 
     const { error } = await supabase.auth.signOut()
-
     if (error) {
       console.error(error)
       alert('Erro ao sair do sistema')
       return
     }
-
     navigate('/')
   }
-
-  useEffect(() => {
-    buscarUsuario()
-  }, [])
 
   const inicial = (emailUsuario || '?').charAt(0).toUpperCase()
 
   return (
-    <header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b border-white/10 bg-zinc-950/60 px-6 backdrop-blur-xl md:px-8">
-      <div className="flex items-center gap-3">
+    <header className="sticky top-0 z-10 flex h-16 items-center justify-between gap-3 border-b border-white/10 bg-zinc-950/60 px-4 backdrop-blur-xl md:px-8">
+      <div className="flex min-w-0 items-center gap-3">
         <button
           type="button"
           onClick={onAbrirMenu}
@@ -56,34 +95,74 @@ function Header({ onAbrirMenu }: HeaderProps) {
           </svg>
         </button>
 
-        <div>
-          <h2 className="font-semibold text-white">Sistema de Gestão</h2>
-          <p className="text-sm text-zinc-500">Salões e barbearias</p>
-        </div>
+        {ehAdmin && saloes.length > 0 ? (
+          <div className="flex items-center gap-2">
+            <select
+              value={salaoAtivo}
+              onChange={(event) => trocarFilial(event.target.value)}
+              className="max-w-[45vw] truncate rounded-lg border border-white/15 bg-zinc-950/40 px-3 py-2 text-sm outline-none focus:border-violet-500 md:max-w-xs"
+              title="Trocar de filial"
+            >
+              {saloes.map((s) => (
+                <option key={s.id} value={s.id}>
+                  {s.nome}
+                </option>
+              ))}
+            </select>
+            <button
+              type="button"
+              onClick={novaFilial}
+              title="Nova filial"
+              className="rounded-lg border border-white/15 px-2.5 py-2 text-sm text-zinc-300 hover:bg-white/5 hover:text-white"
+            >
+              +
+            </button>
+          </div>
+        ) : (
+          <div className="min-w-0">
+            <h2 className="truncate font-semibold text-white">
+              {saloes[0]?.nome ?? 'Sistema de Gestão'}
+            </h2>
+            <p className="truncate text-sm text-zinc-500">Salões e barbearias</p>
+          </div>
+        )}
       </div>
 
-      <div className="flex items-center gap-3">
-        <div className="hidden text-right sm:block">
-          <p className="text-xs text-zinc-500">Usuário logado</p>
-          <p className="text-sm text-zinc-200">
-            {emailUsuario || 'Carregando...'}
-          </p>
-        </div>
+      <div className="flex items-center gap-2 md:gap-3">
+        {ehAdmin && (
+          <Link
+            to="/salao"
+            title="Configurações do salão"
+            className="rounded-lg border border-white/15 p-2 text-zinc-300 hover:bg-white/5 hover:text-white"
+          >
+            <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="3" />
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+            </svg>
+          </Link>
+        )}
 
-        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-violet-500 to-indigo-600 text-sm font-semibold text-white shadow-lg shadow-indigo-950/40">
-          {inicial}
-        </div>
+        <Link
+          to="/perfil"
+          title="Meu perfil"
+          className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-violet-500 to-indigo-600 text-sm font-semibold text-white shadow-lg shadow-indigo-950/40"
+        >
+          {avatarUrl ? (
+            <img
+              src={avatarUrl}
+              alt="Perfil"
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            inicial
+          )}
+        </Link>
 
         <button
           type="button"
           onClick={sair}
-          className="flex items-center gap-2 rounded-lg border border-white/15 px-3 py-2 text-sm text-zinc-300 outline-none hover:border-white/30 hover:text-white focus-visible:ring-2 focus-visible:ring-violet-500/40"
+          className="rounded-lg border border-white/15 px-3 py-2 text-sm text-zinc-300 hover:border-white/30 hover:text-white"
         >
-          <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-            <polyline points="16 17 21 12 16 7" />
-            <line x1="21" y1="12" x2="9" y2="12" />
-          </svg>
           Sair
         </button>
       </div>

@@ -13,6 +13,8 @@ import Onboarding from './pages/Onboarding'
 import AdminGeral from './pages/AdminGeral'
 import EsqueciSenha from './pages/EsqueciSenha'
 import AtualizarSenha from './pages/AtualizarSenha'
+import Perfil from './pages/Perfil'
+import ConfiguracoesSalao from './pages/ConfiguracoesSalao'
 import PrivateRoute from './components/PrivateRoute'
 
 function App() {
@@ -85,6 +87,24 @@ function App() {
           element={
             <PrivateRoute>
               <Estoque />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/perfil"
+          element={
+            <PrivateRoute>
+              <Perfil />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/salao"
+          element={
+            <PrivateRoute>
+              <ConfiguracoesSalao />
             </PrivateRoute>
           }
         />
