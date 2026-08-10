@@ -47,7 +47,7 @@ function PrivateRoute({ children }: PrivateRouteProps) {
 
   if (carregando) {
     return (
-      <div className="flex min-h-screen items-center justify-center text-white">
+      <div className="flex min-h-screen items-center justify-center text-ink">
         Carregando...
       </div>
     )

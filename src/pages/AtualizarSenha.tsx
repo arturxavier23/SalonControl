@@ -68,14 +68,14 @@ function AtualizarSenha() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center px-4 text-white">
+    <div className="flex min-h-screen items-center justify-center px-4 text-ink">
       <div className="w-full max-w-md">
         <div className="mb-8 text-center">
           <h1 className="text-3xl font-bold">Nova senha</h1>
-          <p className="mt-1 text-zinc-400">Defina a sua nova senha de acesso.</p>
+          <p className="mt-1 text-ink-muted">Defina a sua nova senha de acesso.</p>
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-2xl shadow-black/40 backdrop-blur-sm">
+        <div className="rounded-2xl border border-line bg-surface p-6 shadow-xl shadow-black/10 backdrop-blur-sm">
           {ok ? (
             <div className="space-y-4">
               <div className="rounded-lg border border-emerald-700 bg-emerald-950/50 px-3 py-2 text-sm text-emerald-300">
@@ -89,7 +89,7 @@ function AtualizarSenha() {
               </Link>
             </div>
           ) : verificando ? (
-            <p className="text-center text-zinc-400">Carregando...</p>
+            <p className="text-center text-ink-muted">Carregando...</p>
           ) : !pronto ? (
             <div className="space-y-4">
               <div className="rounded-lg border border-rose-800 bg-rose-950/60 px-3 py-2 text-sm text-rose-300">

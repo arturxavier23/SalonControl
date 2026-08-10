@@ -102,15 +102,15 @@ function Perfil() {
     <Layout>
       <div className="mb-6">
         <h1 className="text-3xl font-bold">Meu perfil</h1>
-        <p className="text-zinc-400">Edite seu nome e sua foto.</p>
+        <p className="text-ink-muted">Edite seu nome e sua foto.</p>
       </div>
 
       {carregando ? (
-        <p className="text-zinc-400">Carregando...</p>
+        <p className="text-ink-muted">Carregando...</p>
       ) : (
         <form
           onSubmit={salvar}
-          className="max-w-lg space-y-5 rounded-2xl border border-white/10 bg-white/5 p-6 shadow-xl shadow-black/20 backdrop-blur-sm"
+          className="max-w-lg space-y-5 rounded-2xl border border-line bg-surface p-6 shadow-lg shadow-black/5 backdrop-blur-sm"
         >
           {mensagemErro && (
             <div className="rounded-lg border border-rose-800 bg-rose-950/60 px-3 py-2 text-sm text-rose-300">
@@ -124,7 +124,7 @@ function Perfil() {
           )}
 
           <div className="flex items-center gap-4">
-            <div className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-full border border-white/10 bg-zinc-800 text-2xl font-semibold">
+            <div className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-full border border-line bg-surface-2 text-2xl font-semibold">
               {preview ? (
                 <img
                   src={preview}
@@ -136,7 +136,7 @@ function Perfil() {
               )}
             </div>
 
-            <label className="cursor-pointer rounded-lg border border-white/15 px-4 py-2 text-sm text-zinc-200 hover:bg-white/5 hover:text-white">
+            <label className="cursor-pointer rounded-lg border border-line px-4 py-2 text-sm text-ink hover:bg-elevated hover:text-ink">
               Escolher foto
               <input
                 type="file"
@@ -158,11 +158,11 @@ function Perfil() {
           />
 
           <div>
-            <label className="mb-1 block text-sm text-zinc-400">E-mail</label>
+            <label className="mb-1 block text-sm text-ink-muted">E-mail</label>
             <input
               value={email}
               disabled
-              className="w-full rounded-lg border border-white/10 bg-zinc-950/40 px-3 py-2 text-zinc-500"
+              className="w-full rounded-lg border border-line bg-surface-2 px-3 py-2 text-ink-subtle"
             />
           </div>
 

@@ -190,7 +190,7 @@ function Profissionais() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-3xl font-bold">Profissionais</h1>
-          <p className="text-zinc-400">
+          <p className="text-ink-muted">
             Cadastre os profissionais do salão ou barbearia.
           </p>
         </div>
@@ -198,7 +198,7 @@ function Profissionais() {
         <button
           type="button"
           onClick={() => nomeInputRef.current?.focus()}
-          className="bg-gradient-to-r from-violet-600 to-indigo-600 text-white px-4 py-2 rounded-lg font-semibold shadow-lg shadow-indigo-950/40 hover:from-violet-500 hover:to-indigo-500"
+          className="bg-gradient-to-r from-violet-600 to-indigo-600 text-ink px-4 py-2 rounded-lg font-semibold shadow-lg shadow-indigo-500/25 hover:from-violet-500 hover:to-indigo-500"
         >
           Novo profissional
         </button>
@@ -208,7 +208,7 @@ function Profissionais() {
         <form
           onSubmit={salvarProfissional}
           onKeyDown={handleEnterComoTab}
-          className="bg-white/5 border border-white/10 rounded-2xl shadow-xl shadow-black/20 backdrop-blur-sm p-5 space-y-4"
+          className="bg-surface border border-line rounded-2xl shadow-lg shadow-black/5 backdrop-blur-sm p-5 space-y-4"
         >
           <h2 className="text-xl font-semibold">
             {profissionalEditandoId
@@ -223,12 +223,12 @@ function Profissionais() {
           )}
 
           <div>
-            <label className="block text-sm text-zinc-400 mb-1">
+            <label className="block text-sm text-ink-muted mb-1">
               Nome *
             </label>
             <input
               ref={nomeInputRef}
-              className="w-full bg-zinc-950/40 border border-white/10 rounded-lg px-3 py-2 outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20"
+              className="w-full bg-surface-2 border border-line rounded-lg px-3 py-2 outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20"
               value={nome}
               onChange={(event) => setNome(event.target.value)}
               placeholder="Ex: João Silva"
@@ -236,11 +236,11 @@ function Profissionais() {
           </div>
 
           <div>
-            <label className="block text-sm text-zinc-400 mb-1">
+            <label className="block text-sm text-ink-muted mb-1">
               Telefone
             </label>
             <input
-              className="w-full bg-zinc-950/40 border border-white/10 rounded-lg px-3 py-2 outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20"
+              className="w-full bg-surface-2 border border-line rounded-lg px-3 py-2 outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20"
               value={telefone}
               onChange={(event) => setTelefone(event.target.value)}
               placeholder="Ex: 65 99999-9999"
@@ -248,13 +248,13 @@ function Profissionais() {
           </div>
 
           <div>
-            <label className="block text-sm text-zinc-400 mb-1">
+            <label className="block text-sm text-ink-muted mb-1">
               Comissão %
             </label>
             <input
               type="number"
               step="0.01"
-              className="w-full bg-zinc-950/40 border border-white/10 rounded-lg px-3 py-2 outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20"
+              className="w-full bg-surface-2 border border-line rounded-lg px-3 py-2 outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20"
               value={percentualComissao}
               onChange={(event) => setPercentualComissao(event.target.value)}
               placeholder="Ex: 40"
@@ -264,7 +264,7 @@ function Profissionais() {
           <button
             type="submit"
             disabled={salvando}
-            className="w-full bg-gradient-to-r from-violet-600 to-indigo-600 text-white px-4 py-2 rounded-lg font-semibold shadow-lg shadow-indigo-950/40 hover:from-violet-500 hover:to-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-gradient-to-r from-violet-600 to-indigo-600 text-ink px-4 py-2 rounded-lg font-semibold shadow-lg shadow-indigo-500/25 hover:from-violet-500 hover:to-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {salvando
               ? 'Salvando...'
@@ -277,28 +277,28 @@ function Profissionais() {
             <button
               type="button"
               onClick={limparFormulario}
-              className="w-full border border-white/15 text-zinc-300 hover:bg-white/5 hover:text-white px-4 py-2 rounded-lg font-medium"
+              className="w-full border border-line text-ink-muted hover:bg-elevated hover:text-ink px-4 py-2 rounded-lg font-medium"
             >
               Cancelar edição
             </button>
           )}
         </form>
 
-        <div className="lg:col-span-2 bg-white/5 border border-white/10 rounded-2xl shadow-xl shadow-black/20 backdrop-blur-sm p-5">
+        <div className="lg:col-span-2 bg-surface border border-line rounded-2xl shadow-lg shadow-black/5 backdrop-blur-sm p-5">
           <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <h2 className="text-xl font-semibold">Profissionais cadastrados</h2>
             <input
               value={busca}
               onChange={(event) => setBusca(event.target.value)}
               placeholder="Buscar por nome ou telefone..."
-              className="w-full rounded-lg border border-white/10 bg-zinc-950/40 px-3 py-2 text-sm outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 sm:w-64"
+              className="w-full rounded-lg border border-line bg-surface-2 px-3 py-2 text-sm outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 sm:w-64"
             />
           </div>
 
           {carregando ? (
-            <p className="text-zinc-400">Carregando profissionais...</p>
+            <p className="text-ink-muted">Carregando profissionais...</p>
           ) : profissionaisFiltrados.length === 0 ? (
-            <p className="text-zinc-400">
+            <p className="text-ink-muted">
               {profissionais.length === 0
                 ? 'Nenhum profissional cadastrado ainda.'
                 : 'Nenhum profissional encontrado para essa busca.'}
@@ -308,18 +308,18 @@ function Profissionais() {
               {profissionaisFiltrados.map((profissional) => (
                 <div
                   key={profissional.id}
-                  className="bg-zinc-950/40 border border-white/10 rounded-lg p-4 flex items-start justify-between gap-4"
+                  className="bg-surface-2 border border-line rounded-lg p-4 flex items-start justify-between gap-4"
                 >
                   <div>
                     <h3 className="font-semibold">{profissional.nome}</h3>
 
                     {profissional.telefone && (
-                      <p className="text-sm text-zinc-400">
+                      <p className="text-sm text-ink-muted">
                         {profissional.telefone}
                       </p>
                     )}
 
-                    <p className="text-sm text-zinc-500 mt-1">
+                    <p className="text-sm text-ink-subtle mt-1">
                       Comissão:{' '}
                       {Number(profissional.percentual_comissao)
                         .toFixed(2)

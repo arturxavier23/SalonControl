@@ -42,17 +42,17 @@ function EsqueciSenha() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center px-4 text-white">
+    <div className="flex min-h-screen items-center justify-center px-4 text-ink">
       <div className="w-full max-w-md">
         <div className="mb-8 text-center">
           <h1 className="text-3xl font-bold">Recuperar senha</h1>
-          <p className="mt-1 text-zinc-400">
+          <p className="mt-1 text-ink-muted">
             Enviaremos um link para você criar uma nova senha.
           </p>
         </div>
 
         {enviado ? (
-          <div className="space-y-4 rounded-2xl border border-white/10 bg-white/5 p-6 shadow-2xl shadow-black/40 backdrop-blur-sm">
+          <div className="space-y-4 rounded-2xl border border-line bg-surface p-6 shadow-xl shadow-black/10 backdrop-blur-sm">
             <div className="rounded-lg border border-emerald-700 bg-emerald-950/50 px-3 py-2 text-sm text-emerald-300">
               Se existir uma conta com esse e-mail, enviamos um link para
               redefinir a senha. Confira sua caixa de entrada (e o spam).
@@ -67,7 +67,7 @@ function EsqueciSenha() {
         ) : (
           <form
             onSubmit={enviar}
-            className="space-y-4 rounded-2xl border border-white/10 bg-white/5 p-6 shadow-2xl shadow-black/40 backdrop-blur-sm"
+            className="space-y-4 rounded-2xl border border-line bg-surface p-6 shadow-xl shadow-black/10 backdrop-blur-sm"
           >
             {mensagemErro && (
               <div className="rounded-lg border border-rose-800 bg-rose-950/60 px-3 py-2 text-sm text-rose-300">
@@ -90,7 +90,7 @@ function EsqueciSenha() {
 
             <Link
               to="/"
-              className="block text-center text-sm text-zinc-400 hover:text-zinc-200"
+              className="block text-center text-sm text-ink-muted hover:text-ink"
             >
               Voltar para o login
             </Link>

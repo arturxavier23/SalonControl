@@ -20,6 +20,18 @@ function Header({ onAbrirMenu }: HeaderProps) {
   const [ehAdmin, setEhAdmin] = useState(false)
   const [saloes, setSaloes] = useState<SalaoItem[]>([])
   const [salaoAtivo, setSalaoAtivo] = useState('')
+  const [escuro, setEscuro] = useState(false)
+
+  useEffect(() => {
+    setEscuro(document.documentElement.classList.contains('dark'))
+  }, [])
+
+  function alternarTema() {
+    const novo = !escuro
+    document.documentElement.classList.toggle('dark', novo)
+    localStorage.setItem('tema', novo ? 'dark' : 'light')
+    setEscuro(novo)
+  }
 
   async function carregar() {
     const { data } = await supabase.auth.getUser()
@@ -80,13 +92,13 @@ function Header({ onAbrirMenu }: HeaderProps) {
   const inicial = (emailUsuario || '?').charAt(0).toUpperCase()
 
   return (
-    <header className="sticky top-0 z-10 flex h-16 items-center justify-between gap-3 border-b border-white/10 bg-zinc-950/60 px-4 backdrop-blur-xl md:px-8">
+    <header className="sticky top-0 z-10 flex h-16 items-center justify-between gap-3 border-b border-line bg-glass px-4 backdrop-blur-xl md:px-8">
       <div className="flex min-w-0 items-center gap-3">
         <button
           type="button"
           onClick={onAbrirMenu}
           aria-label="Abrir menu"
-          className="rounded-lg border border-white/15 p-2 text-zinc-300 hover:bg-white/5 hover:text-white md:hidden"
+          className="rounded-lg border border-line p-2 text-ink-muted hover:bg-elevated hover:text-ink md:hidden"
         >
           <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <line x1="3" y1="6" x2="21" y2="6" />
@@ -100,7 +112,7 @@ function Header({ onAbrirMenu }: HeaderProps) {
             <select
               value={salaoAtivo}
               onChange={(event) => trocarFilial(event.target.value)}
-              className="max-w-[45vw] truncate rounded-lg border border-white/15 bg-zinc-950/40 px-3 py-2 text-sm outline-none focus:border-violet-500 md:max-w-xs"
+              className="max-w-[45vw] truncate rounded-lg border border-line bg-surface-2 px-3 py-2 text-sm outline-none focus:border-violet-500 md:max-w-xs"
               title="Trocar de filial"
             >
               {saloes.map((s) => (
@@ -113,27 +125,53 @@ function Header({ onAbrirMenu }: HeaderProps) {
               type="button"
               onClick={novaFilial}
               title="Nova filial"
-              className="rounded-lg border border-white/15 px-2.5 py-2 text-sm text-zinc-300 hover:bg-white/5 hover:text-white"
+              className="rounded-lg border border-line px-2.5 py-2 text-sm text-ink-muted hover:bg-elevated hover:text-ink"
             >
               +
             </button>
           </div>
         ) : (
           <div className="min-w-0">
-            <h2 className="truncate font-semibold text-white">
+            <h2 className="truncate font-semibold text-ink">
               {saloes[0]?.nome ?? 'Sistema de Gestão'}
             </h2>
-            <p className="truncate text-sm text-zinc-500">Salões e barbearias</p>
+            <p className="truncate text-sm text-ink-subtle">Salões e barbearias</p>
           </div>
         )}
       </div>
 
       <div className="flex items-center gap-2 md:gap-3">
+        <button
+          type="button"
+          onClick={alternarTema}
+          title={escuro ? 'Modo claro' : 'Modo escuro'}
+          aria-label="Alternar tema"
+          className="rounded-lg border border-line p-2 text-ink-muted hover:bg-elevated hover:text-ink"
+        >
+          {escuro ? (
+            <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="5" />
+              <line x1="12" y1="1" x2="12" y2="3" />
+              <line x1="12" y1="21" x2="12" y2="23" />
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+              <line x1="1" y1="12" x2="3" y2="12" />
+              <line x1="21" y1="12" x2="23" y2="12" />
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+            </svg>
+          ) : (
+            <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+            </svg>
+          )}
+        </button>
+
         {ehAdmin && (
           <Link
             to="/salao"
             title="Configurações do salão"
-            className="rounded-lg border border-white/15 p-2 text-zinc-300 hover:bg-white/5 hover:text-white"
+            className="rounded-lg border border-line p-2 text-ink-muted hover:bg-elevated hover:text-ink"
           >
             <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="12" cy="12" r="3" />
@@ -145,7 +183,7 @@ function Header({ onAbrirMenu }: HeaderProps) {
         <Link
           to="/perfil"
           title="Meu perfil"
-          className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-violet-500 to-indigo-600 text-sm font-semibold text-white shadow-lg shadow-indigo-950/40"
+          className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-violet-500 to-indigo-600 text-sm font-semibold text-ink shadow-lg shadow-indigo-500/25"
         >
           {avatarUrl ? (
             <img
@@ -161,7 +199,7 @@ function Header({ onAbrirMenu }: HeaderProps) {
         <button
           type="button"
           onClick={sair}
-          className="rounded-lg border border-white/15 px-3 py-2 text-sm text-zinc-300 hover:border-white/30 hover:text-white"
+          className="rounded-lg border border-line px-3 py-2 text-sm text-ink-muted hover:border-strong hover:text-ink"
         >
           Sair
         </button>

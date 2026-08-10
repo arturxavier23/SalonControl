@@ -10,12 +10,12 @@ const estilosBase =
 
 const estilosPorVariante: Record<ButtonVariant, string> = {
   primary:
-    'bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-lg shadow-indigo-950/40 hover:from-violet-500 hover:to-indigo-500 active:scale-[0.98]',
+    'bg-gradient-to-r from-violet-600 to-indigo-600 text-ink shadow-lg shadow-indigo-500/25 hover:from-violet-500 hover:to-indigo-500 active:scale-[0.98]',
   secondary:
-    'border border-white/15 bg-white/5 text-zinc-200 hover:bg-white/10 hover:text-white',
+    'border border-line bg-surface text-ink hover:bg-elevated hover:text-ink',
   danger:
     'border border-rose-500/30 bg-rose-500/10 text-rose-300 hover:bg-rose-500/20 hover:text-rose-200',
-  ghost: 'text-zinc-300 hover:bg-white/5 hover:text-white',
+  ghost: 'text-ink-muted hover:bg-elevated hover:text-ink',
 }
 
 function Button({

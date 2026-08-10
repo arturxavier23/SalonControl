@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { motion } from 'motion/react'
 import Layout from '../components/Layout'
 import { supabase } from '../services/supabase'
 import { usuarioEhAdmin } from '../services/auth'
@@ -29,11 +30,11 @@ const coresStatus: Record<string, string> = {
   finalizado: 'bg-violet-500/15 text-violet-300 ring-violet-500/30',
   pago: 'bg-emerald-500/15 text-emerald-300 ring-emerald-500/30',
   cancelado: 'bg-rose-500/15 text-rose-300 ring-rose-500/30',
-  nao_compareceu: 'bg-zinc-500/15 text-zinc-300 ring-zinc-500/30',
+  nao_compareceu: 'bg-zinc-500/15 text-ink-muted ring-zinc-500/30',
 }
 
 function badgeStatus(status: string) {
-  return coresStatus[status] ?? 'bg-zinc-500/15 text-zinc-300 ring-zinc-500/30'
+  return coresStatus[status] ?? 'bg-zinc-500/15 text-ink-muted ring-zinc-500/30'
 }
 
 type Indicador = {
@@ -268,16 +269,18 @@ function Dashboard() {
 
   return (
     <Layout>
-      <div className="mb-8 flex items-center justify-between">
+      <div className="mb-8 flex items-end justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Dashboard</h1>
-          <p className="text-zinc-400">Visão geral do salão ou barbearia.</p>
+          <h1 className="text-4xl font-bold tracking-tight">Dashboard</h1>
+          <p className="mt-1 text-ink-muted">
+            Visão geral do salão ou barbearia.
+          </p>
         </div>
 
         <button
           type="button"
           onClick={carregarDashboard}
-          className="inline-flex items-center gap-2 rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-sm font-medium text-zinc-200 outline-none hover:bg-white/10 hover:text-white focus-visible:ring-2 focus-visible:ring-violet-500/40"
+          className="inline-flex items-center gap-2 rounded-lg border border-line bg-surface px-4 py-2 text-sm font-medium text-ink outline-none hover:bg-elevated hover:text-ink focus-visible:ring-2 focus-visible:ring-violet-500/40"
         >
           <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <polyline points="23 4 23 10 17 10" />
@@ -288,25 +291,29 @@ function Dashboard() {
       </div>
 
       {carregando ? (
-        <p className="text-zinc-400">Carregando dados...</p>
+        <p className="text-ink-muted">Carregando dados...</p>
       ) : (
         <>
           {(salaoNome || codigoConvite) && (
-            <div className="mb-6 flex flex-col gap-3 rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-sm sm:flex-row sm:items-center sm:justify-between">
+            <div className="mb-6 flex flex-col gap-4 overflow-hidden rounded-2xl border border-violet-500/20 bg-gradient-to-br from-violet-600/15 via-white/5 to-transparent p-6 backdrop-blur-sm sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <p className="text-sm text-zinc-400">Salão</p>
-                <strong className="text-lg">{salaoNome || '—'}</strong>
+                <p className="text-xs font-medium uppercase tracking-wider text-ink-muted">
+                  Salão
+                </p>
+                <strong className="text-xl tracking-tight">
+                  {salaoNome || '—'}
+                </strong>
               </div>
 
               {ehAdmin && codigoConvite && (
                 <div className="sm:text-right">
-                  <p className="text-sm text-zinc-400">
+                  <p className="text-xs font-medium uppercase tracking-wider text-ink-muted">
                     Código de convite da equipe
                   </p>
-                  <span className="font-mono text-lg tracking-widest text-violet-300">
+                  <span className="font-mono text-2xl font-semibold tracking-[0.2em] text-violet-300">
                     {codigoConvite}
                   </span>
-                  <p className="text-xs text-zinc-500">
+                  <p className="mt-0.5 text-xs text-ink-subtle">
                     Compartilhe com seus funcionários para eles entrarem.
                   </p>
                 </div>
@@ -316,51 +323,57 @@ function Dashboard() {
 
           <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {indicadores.map((indicador) => (
-              <div
+              <motion.div
                 key={indicador.titulo}
-                className="rounded-2xl border border-white/10 bg-white/5 p-5 shadow-xl shadow-black/20 backdrop-blur-sm transition hover:border-white/20"
+                whileHover={{ y: -3 }}
+                transition={{ type: 'spring', bounce: 0.3, duration: 0.4 }}
+                className="rounded-2xl border border-line bg-surface p-6 shadow-lg shadow-black/5 backdrop-blur-sm hover:border-strong"
               >
                 <div className="flex items-center justify-between">
-                  <p className="text-sm text-zinc-400">{indicador.titulo}</p>
+                  <p className="text-sm font-medium text-ink-muted">
+                    {indicador.titulo}
+                  </p>
                   <div
-                    className={`flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br to-transparent ${indicador.cor}`}
+                    className={`flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br to-transparent ${indicador.cor}`}
                   >
                     {indicador.icone}
                   </div>
                 </div>
-                <strong className="mt-2 block text-3xl">{indicador.valor}</strong>
-              </div>
+                <strong className="mt-3 block text-4xl font-bold tracking-tight">
+                  {indicador.valor}
+                </strong>
+              </motion.div>
             ))}
           </div>
 
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-5 shadow-xl shadow-black/20 backdrop-blur-sm">
+          <div className="rounded-2xl border border-line bg-surface p-5 shadow-lg shadow-black/5 backdrop-blur-sm">
             <h2 className="mb-4 text-xl font-semibold">Últimos agendamentos</h2>
 
             {ultimosAgendamentos.length === 0 ? (
-              <p className="text-zinc-400">Nenhum agendamento encontrado.</p>
+              <p className="text-ink-muted">Nenhum agendamento encontrado.</p>
             ) : (
               <div className="space-y-3">
                 {ultimosAgendamentos.map((agendamento) => (
                   <div
                     key={agendamento.id}
-                    className="flex items-center justify-between gap-4 rounded-xl border border-white/10 bg-zinc-950/40 p-4 transition hover:border-white/20"
+                    className="flex items-center justify-between gap-4 rounded-xl border border-line bg-surface-2 p-4 transition hover:border-strong"
                   >
                     <div>
                       <h3 className="font-semibold">
                         {agendamento.clientes?.nome || 'Cliente removido'}
                       </h3>
 
-                      <p className="text-xs text-zinc-500">
+                      <p className="text-xs text-ink-subtle">
                         Atendimento #{agendamento.id.slice(0, 8)}
                       </p>
 
-                      <p className="text-sm text-zinc-400">
+                      <p className="text-sm text-ink-muted">
                         {agendamento.servicos?.nome || 'Serviço removido'} ·{' '}
                         {agendamento.profissionais?.nome ||
                           'Profissional removido'}
                       </p>
 
-                      <p className="text-sm text-zinc-500">
+                      <p className="text-sm text-ink-subtle">
                         {agendamento.data} · {agendamento.hora_inicio}
                       </p>
                     </div>

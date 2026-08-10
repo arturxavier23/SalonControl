@@ -114,30 +114,30 @@ function Onboarding() {
 
   if (verificando) {
     return (
-      <div className="flex min-h-screen items-center justify-center text-white">
+      <div className="flex min-h-screen items-center justify-center text-ink">
         Carregando...
       </div>
     )
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center px-4 text-white">
+    <div className="flex min-h-screen items-center justify-center px-4 text-ink">
       <div className="w-full max-w-md">
         <div className="mb-8 text-center">
           <h1 className="text-3xl font-bold">Bem-vindo!</h1>
-          <p className="mt-1 text-zinc-400">
+          <p className="mt-1 text-ink-muted">
             Crie o seu salão ou entre em um com o código de convite.
           </p>
         </div>
 
-        <div className="mb-4 flex rounded-lg border border-white/10 bg-white/5 p-1">
+        <div className="mb-4 flex rounded-lg border border-line bg-surface p-1">
           <button
             type="button"
             onClick={() => setModo('criar')}
             className={`flex-1 rounded-md px-3 py-2 text-sm font-medium ${
               modo === 'criar'
-                ? 'bg-gradient-to-r from-violet-600 to-indigo-600 text-white'
-                : 'text-zinc-300 hover:text-white'
+                ? 'bg-gradient-to-r from-violet-600 to-indigo-600 text-ink'
+                : 'text-ink-muted hover:text-ink'
             }`}
           >
             Criar salão
@@ -147,8 +147,8 @@ function Onboarding() {
             onClick={() => setModo('entrar')}
             className={`flex-1 rounded-md px-3 py-2 text-sm font-medium ${
               modo === 'entrar'
-                ? 'bg-gradient-to-r from-violet-600 to-indigo-600 text-white'
-                : 'text-zinc-300 hover:text-white'
+                ? 'bg-gradient-to-r from-violet-600 to-indigo-600 text-ink'
+                : 'text-ink-muted hover:text-ink'
             }`}
           >
             Entrar com código
@@ -158,7 +158,7 @@ function Onboarding() {
         {modo === 'criar' ? (
           <form
             onSubmit={criarSalao}
-            className="space-y-4 rounded-2xl border border-white/10 bg-white/5 p-6 shadow-2xl shadow-black/40 backdrop-blur-sm"
+            className="space-y-4 rounded-2xl border border-line bg-surface p-6 shadow-xl shadow-black/10 backdrop-blur-sm"
           >
             {mensagemErro && (
               <div className="rounded-lg border border-rose-800 bg-rose-950/60 px-3 py-2 text-sm text-rose-300">
@@ -186,14 +186,14 @@ function Onboarding() {
               {salvando ? 'Criando...' : 'Criar salão e começar'}
             </Button>
 
-            <p className="text-xs text-zinc-500">
+            <p className="text-xs text-ink-subtle">
               Você será o administrador deste salão.
             </p>
           </form>
         ) : (
           <form
             onSubmit={entrarComCodigo}
-            className="space-y-4 rounded-2xl border border-white/10 bg-white/5 p-6 shadow-2xl shadow-black/40 backdrop-blur-sm"
+            className="space-y-4 rounded-2xl border border-line bg-surface p-6 shadow-xl shadow-black/10 backdrop-blur-sm"
           >
             {mensagemErro && (
               <div className="rounded-lg border border-rose-800 bg-rose-950/60 px-3 py-2 text-sm text-rose-300">
@@ -221,7 +221,7 @@ function Onboarding() {
               {salvando ? 'Entrando...' : 'Entrar no salão'}
             </Button>
 
-            <p className="text-xs text-zinc-500">
+            <p className="text-xs text-ink-subtle">
               Peça o código ao administrador do salão.
             </p>
           </form>
@@ -230,7 +230,7 @@ function Onboarding() {
         <button
           type="button"
           onClick={sair}
-          className="mt-6 w-full text-center text-sm text-zinc-500 hover:text-zinc-300"
+          className="mt-6 w-full text-center text-sm text-ink-subtle hover:text-ink-muted"
         >
           Sair desta conta
         </button>

@@ -184,18 +184,18 @@ function AdminGeral() {
 
   if (verificando) {
     return (
-      <div className="flex min-h-screen items-center justify-center text-white">
+      <div className="flex min-h-screen items-center justify-center text-ink">
         Carregando...
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen text-white">
-      <header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b border-white/10 bg-zinc-950/60 px-6 backdrop-blur-xl md:px-8">
+    <div className="min-h-screen text-ink">
+      <header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b border-line bg-glass px-6 backdrop-blur-xl md:px-8">
         <div className="flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-indigo-600 shadow-lg shadow-indigo-950/40">
-            <svg className="h-5 w-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-indigo-600 shadow-lg shadow-indigo-500/25">
+            <svg className="h-5 w-5 text-ink" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M12 2 2 7l10 5 10-5-10-5z" />
               <path d="m2 17 10 5 10-5" />
               <path d="m2 12 10 5 10-5" />
@@ -203,14 +203,14 @@ function AdminGeral() {
           </div>
           <div>
             <h1 className="font-semibold">Console da Plataforma</h1>
-            <p className="text-xs text-zinc-500">Gestão de salões clientes</p>
+            <p className="text-xs text-ink-subtle">Gestão de salões clientes</p>
           </div>
         </div>
 
         <button
           type="button"
           onClick={sair}
-          className="rounded-lg border border-white/15 px-3 py-2 text-sm text-zinc-300 hover:bg-white/5 hover:text-white"
+          className="rounded-lg border border-line px-3 py-2 text-sm text-ink-muted hover:bg-elevated hover:text-ink"
         >
           Sair
         </button>
@@ -219,7 +219,7 @@ function AdminGeral() {
       <main className="mx-auto grid w-full max-w-7xl grid-cols-1 gap-6 p-6 md:p-8 lg:grid-cols-3">
         <form
           onSubmit={cadastrarSalao}
-          className="space-y-4 rounded-2xl border border-white/10 bg-white/5 p-5 shadow-xl shadow-black/20 backdrop-blur-sm"
+          className="space-y-4 rounded-2xl border border-line bg-surface p-5 shadow-lg shadow-black/5 backdrop-blur-sm"
         >
           <h2 className="text-xl font-semibold">Novo salão cliente</h2>
 
@@ -273,12 +273,12 @@ function AdminGeral() {
             {salvando ? 'Criando...' : 'Criar salão e admin'}
           </Button>
 
-          <p className="text-xs text-zinc-500">
+          <p className="text-xs text-ink-subtle">
             O admin poderá trocar a senha depois. Anote e envie o login a ele.
           </p>
         </form>
 
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-5 shadow-xl shadow-black/20 backdrop-blur-sm lg:col-span-2">
+        <div className="rounded-2xl border border-line bg-surface p-5 shadow-lg shadow-black/5 backdrop-blur-sm lg:col-span-2">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="text-xl font-semibold">
               Salões cadastrados ({saloes.length})
@@ -286,39 +286,39 @@ function AdminGeral() {
             <button
               type="button"
               onClick={carregarSaloes}
-              className="rounded-lg border border-white/15 px-3 py-1.5 text-sm text-zinc-300 hover:bg-white/5 hover:text-white"
+              className="rounded-lg border border-line px-3 py-1.5 text-sm text-ink-muted hover:bg-elevated hover:text-ink"
             >
               Atualizar
             </button>
           </div>
 
           {carregandoLista ? (
-            <p className="text-zinc-400">Carregando salões...</p>
+            <p className="text-ink-muted">Carregando salões...</p>
           ) : saloes.length === 0 ? (
-            <p className="text-zinc-400">Nenhum salão cadastrado ainda.</p>
+            <p className="text-ink-muted">Nenhum salão cadastrado ainda.</p>
           ) : (
             <div className="space-y-3">
               {saloes.map((salao) => (
                 <div
                   key={salao.id}
-                  className="rounded-lg border border-white/10 bg-zinc-950/40 p-4"
+                  className="rounded-lg border border-line bg-surface-2 p-4"
                 >
                   <div className="flex items-start justify-between gap-4">
                     <div>
                       <h3 className="font-semibold">{salao.nome}</h3>
                       {salao.admin_nome && (
-                        <p className="text-sm text-zinc-400">
+                        <p className="text-sm text-ink-muted">
                           Admin: {salao.admin_nome}
                         </p>
                       )}
-                      <p className="text-xs text-zinc-500">
+                      <p className="text-xs text-ink-subtle">
                         Criado em{' '}
                         {new Date(salao.criado_em).toLocaleDateString('pt-BR')}
                       </p>
                     </div>
 
                     <div className="text-right">
-                      <p className="text-xs text-zinc-400">Código de convite</p>
+                      <p className="text-xs text-ink-muted">Código de convite</p>
                       <span className="font-mono tracking-widest text-violet-300">
                         {salao.codigo_convite}
                       </span>
@@ -332,14 +332,14 @@ function AdminGeral() {
                         value={novaSenha}
                         onChange={(event) => setNovaSenha(event.target.value)}
                         placeholder="Nova senha (mín. 6)"
-                        className="w-full rounded-lg border border-white/10 bg-zinc-950/40 px-3 py-2 text-sm outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20"
+                        className="w-full rounded-lg border border-line bg-surface-2 px-3 py-2 text-sm outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20"
                       />
                       <div className="flex gap-2">
                         <button
                           type="button"
                           onClick={() => redefinirSenha(salao.id)}
                           disabled={resetSalvando}
-                          className="rounded-lg bg-gradient-to-r from-violet-600 to-indigo-600 px-3 py-2 text-sm font-semibold text-white hover:from-violet-500 hover:to-indigo-500 disabled:opacity-50"
+                          className="rounded-lg bg-gradient-to-r from-violet-600 to-indigo-600 px-3 py-2 text-sm font-semibold text-ink hover:from-violet-500 hover:to-indigo-500 disabled:opacity-50"
                         >
                           {resetSalvando ? 'Salvando...' : 'Salvar'}
                         </button>
@@ -349,7 +349,7 @@ function AdminGeral() {
                             setResetSalaoId(null)
                             setNovaSenha('')
                           }}
-                          className="rounded-lg border border-white/15 px-3 py-2 text-sm text-zinc-300 hover:bg-white/5 hover:text-white"
+                          className="rounded-lg border border-line px-3 py-2 text-sm text-ink-muted hover:bg-elevated hover:text-ink"
                         >
                           Cancelar
                         </button>

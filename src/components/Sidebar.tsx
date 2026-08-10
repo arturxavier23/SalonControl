@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
+import { AnimatePresence, motion } from 'motion/react'
 import { supabase } from '../services/supabase'
 
 type SidebarProps = {
@@ -121,8 +122,8 @@ function ConteudoSidebar({
             className="h-16 w-16 shrink-0 rounded-xl object-contain"
           />
         ) : (
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-indigo-600 shadow-lg shadow-indigo-950/40">
-            <svg className="h-5 w-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-indigo-600 shadow-lg shadow-indigo-500/25">
+            <svg className="h-5 w-5 text-ink" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M8 21h8" />
               <path d="M12 17v4" />
               <path d="M7 4h10l-1 8a4 4 0 0 1-8 0z" />
@@ -130,24 +131,28 @@ function ConteudoSidebar({
           </div>
         )}
         <div className="min-w-0">
-          <h1 className="truncate text-lg font-bold leading-tight text-white">
+          <h1 className="truncate text-lg font-bold leading-tight text-ink">
             {marca.nome || 'SalonControl'}
           </h1>
-          <p className="truncate text-xs text-zinc-500">SalonControl</p>
+          <p className="truncate text-xs text-ink-subtle">SalonControl</p>
         </div>
       </div>
 
-      <nav className="flex flex-col gap-1">
+      <p className="mb-2 px-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-subtle">
+        Menu
+      </p>
+      <nav className="flex flex-col gap-1.5">
         {itens.map((item) => (
           <NavLink
             key={item.to}
             to={item.to}
             onClick={onFechar}
+            data-press
             className={({ isActive }) =>
-              `flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium ${
+              `flex items-center gap-3 rounded-xl px-3.5 py-3 text-sm font-medium ${
                 isActive
-                  ? 'bg-gradient-to-r from-violet-600/20 to-indigo-600/10 text-white ring-1 ring-inset ring-violet-500/30'
-                  : 'text-zinc-400 hover:bg-white/5 hover:text-white'
+                  ? 'bg-gradient-to-r from-violet-600 to-indigo-600 text-ink shadow-lg shadow-indigo-500/25'
+                  : 'text-ink-muted hover:bg-elevated hover:text-ink'
               }`
             }
           >
@@ -199,22 +204,34 @@ function Sidebar({ aberto = false, onFechar }: SidebarProps) {
   return (
     <>
       {/* Desktop */}
-      <aside className="hidden w-64 shrink-0 border-r border-white/10 bg-zinc-900/50 p-6 backdrop-blur-xl md:block">
+      <aside className="hidden w-64 shrink-0 border-r border-line bg-sidebar p-6 backdrop-blur-xl md:block">
         <ConteudoSidebar marca={marca} />
       </aside>
 
       {/* Mobile (drawer) */}
-      {aberto && (
-        <div className="fixed inset-0 z-40 md:hidden">
-          <div
-            className="absolute inset-0 bg-black/60"
-            onClick={onFechar}
-          />
-          <aside className="absolute left-0 top-0 h-full w-64 border-r border-white/10 bg-zinc-900 p-6">
-            <ConteudoSidebar marca={marca} onFechar={onFechar} />
-          </aside>
-        </div>
-      )}
+      <AnimatePresence>
+        {aberto && (
+          <div className="fixed inset-0 z-40 md:hidden">
+            <motion.div
+              className="absolute inset-0 bg-black/60"
+              onClick={onFechar}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+            />
+            <motion.aside
+              className="absolute left-0 top-0 h-full w-64 border-r border-line bg-surface-solid p-6"
+              initial={{ x: -288 }}
+              animate={{ x: 0 }}
+              exit={{ x: -288 }}
+              transition={{ type: 'spring', bounce: 0.18, duration: 0.4 }}
+            >
+              <ConteudoSidebar marca={marca} onFechar={onFechar} />
+            </motion.aside>
+          </div>
+        )}
+      </AnimatePresence>
     </>
   )
 }
